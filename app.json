@@ -1,9 +1,4 @@
 {
-  "name": "MomenceCurrencyExchangeApp",
-  "displayName": "MomenceCurrencyExchangeApp",
-
-  "ios": {
-    "supportsTablet": true,
-    "bundleIdentifier": "com.pete.creatica.co.uk.momence-exchange-app"
-  }
+  "name": "MomenceCurrencyApp",
+  "displayName": "MomenceCurrencyApp"
 }

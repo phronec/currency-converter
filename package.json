@@ -1,5 +1,5 @@
 {
-  "name": "currency-exchange-app",
+  "name": "momence-demo",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -10,9 +10,9 @@
     "test": "jest"
   },
   "dependencies": {
-    "@react-native/new-app-screen": "0.82.0",
+    "@react-native/new-app-screen": "0.81.0",
     "react": "19.2.0",
-    "react-native": "0.82.0",
+    "react-native": "0.81.0",
     "react-native-safe-area-context": "^5.6.1",
     "styled-components": "^6.1.19"
   },
@@ -23,16 +23,16 @@
     "@react-native-community/cli": "20.0.2",
     "@react-native-community/cli-platform-android": "20.0.2",
     "@react-native-community/cli-platform-ios": "20.0.2",
-    "@react-native/babel-preset": "0.82.0",
-    "@react-native/eslint-config": "0.82.0",
-    "@react-native/metro-config": "0.82.0",
-    "@react-native/typescript-config": "0.82.0",
-    "@types/jest": "30.0.0",
+    "@react-native/babel-preset": "0.81.0",
+    "@react-native/eslint-config": "0.81.0",
+    "@react-native/metro-config": "0.81.0",
+    "@react-native/typescript-config": "0.81.0",
+    "@types/jest": "^29.5.13",
     "@types/react": "^19.2.2",
     "@types/react-test-renderer": "^19.1.0",
     "eslint": "^9.38.0",
     "jest": "^30.2.0",
-    "prettier": "^3.6.2",
+    "prettier": "3.6.2",
     "react-test-renderer": "19.2.0",
     "typescript": "^5.9.3"
   },

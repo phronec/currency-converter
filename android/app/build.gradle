@@ -77,9 +77,9 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.momencecurrencyexchangeapp"
+    namespace "com.momencecurrencyapp"
     defaultConfig {
-        applicationId "com.momencecurrencyexchangeapp"
+        applicationId "com.momencecurrencyapp"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

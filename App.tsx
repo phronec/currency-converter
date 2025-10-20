@@ -1,14 +1,6 @@
-import {
-  StatusBar,
-  StyleSheet,
-  Text,
-  useColorScheme,
-  View,
-} from 'react-native';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import ConversionScreen from './screens/ConversionScreen';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -22,23 +14,7 @@ function App() {
 }
 
 function AppContent() {
-  const safeAreaInsets = useSafeAreaInsets();
-
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Currency exchange</Text>
-    </View>
-  );
+  return <ConversionScreen />;
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  text: {
-    fontSize: 24,
-    color: 'black',
-  },
-});
 
 export default App;
