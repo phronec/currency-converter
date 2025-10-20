@@ -1,0 +1,89 @@
+# React Native .gitignore
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+yarn.lock
+
+# React Native build outputs
+/android/app/build/
+/ios/build/
+/ios/Pods/
+/ios/*.xcworkspace/
+*.jsbundle
+*.map
+*.ipa
+*.apk
+*.aab
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# IDEs and editors
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+logs/
+*.log
+*.log.*
+
+# React Native temporary files
+*.hprof
+*.orig
+*.tmp
+*.bak
+*.swp
+*~
+
+# Android
+/android/.gradle/
+/android/app/src/main/assets/
+/android/app/src/main/res/raw/
+/android/app/src/main/res/drawable*/
+*.iml
+.gradle/
+local.properties
+
+# iOS
+/ios/*.xcodeproj/project.xcworkspace/
+/ios/*.xcodeproj/xcuserdata/
+/ios/Podfile.lock
+/ios/*.pbxproj.bak
+*.mode1v3
+*.mode2v3
+*.perspectivev3
+xcuserdata/
+*.xccheckout
+*.moved-aside
+DerivedData/
+*.hmap
+*.xcscheme
+*.plist
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Miscellaneous
+*.rncache
+metro-cache/
+coverage/
+dist/
+build/
