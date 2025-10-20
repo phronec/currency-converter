@@ -1,20 +1,82 @@
-import React, { useState } from 'react';
+import { czkPerUnit, rateMapByCode, useCnbRates } from '../hooks/useCnbRates';
+import React, { useMemo, useState } from 'react';
 import { TouchableOpacity } from 'react-native';
 import styled from 'styled-components/native';
 
-const currencies = [
-  { code: 'USD', flag: '🇺🇸' },
-  { code: 'GBP', flag: '🇬🇧' },
-  { code: 'EUR', flag: '🇪🇺' },
-  { code: 'JPY', flag: '🇯🇵' },
+type CurrencyCode =
+  | 'CZK'
+  | 'AUD'
+  | 'BRL'
+  | 'BGN'
+  | 'CAD'
+  | 'CNY'
+  | 'DKK'
+  | 'EUR'
+  | 'HKD'
+  | 'HUF'
+  | 'ISK'
+  | 'XDR'
+  | 'INR'
+  | 'IDR'
+  | 'ILS'
+  | 'JPY'
+  | 'MYR'
+  | 'MXN'
+  | 'NZD'
+  | 'NOK'
+  | 'PHP'
+  | 'PLN'
+  | 'RON'
+  | 'SGD'
+  | 'ZAR'
+  | 'KRW'
+  | 'SEK'
+  | 'CHF'
+  | 'THB'
+  | 'TRY'
+  | 'GBP'
+  | 'USD';
+interface Currency {
+  code: CurrencyCode;
+  flag: string;
+}
+
+const currencies: Currency[] = [
+  { code: 'CZK', flag: '🇨🇿' }, // Czech Republic
+  { code: 'AUD', flag: '🇦🇺' }, // Australia
+  { code: 'BRL', flag: '🇧🇷' }, // Brazil
+  { code: 'BGN', flag: '🇧🇬' }, // Bulgaria
+  { code: 'CAD', flag: '🇨🇦' }, // Canada
+  { code: 'CNY', flag: '🇨🇳' }, // China
+  { code: 'DKK', flag: '��' }, // Denmark
+  { code: 'EUR', flag: '🇪🇺' }, // EMU (European Monetary Union)
+  { code: 'HKD', flag: '🇭🇰' }, // Hong Kong
+  { code: 'HUF', flag: '🇭🇺' }, // Hungary
+  { code: 'ISK', flag: '🇮🇸' }, // Iceland
+  { code: 'XDR', flag: '🏦' }, // IMF Special Drawing Rights
+  { code: 'INR', flag: '🇮🇳' }, // India
+  { code: 'IDR', flag: '🇮🇩' }, // Indonesia
+  { code: 'ILS', flag: '🇮🇱' }, // Israel
+  { code: 'JPY', flag: '🇯🇵' }, // Japan
+  { code: 'MYR', flag: '🇲🇾' }, // Malaysia
+  { code: 'MXN', flag: '🇲🇽' }, // Mexico
+  { code: 'NZD', flag: '🇳🇿' }, // New Zealand
+  { code: 'NOK', flag: '🇳🇴' }, // Norway
+  { code: 'PHP', flag: '🇵🇭' }, // Philippines
+  { code: 'PLN', flag: '🇵🇱' }, // Poland
+  { code: 'RON', flag: '🇷🇴' }, // Romania
+  { code: 'SGD', flag: '🇸🇬' }, // Singapore
+  { code: 'ZAR', flag: '🇿🇦' }, // South Africa
+  { code: 'KRW', flag: '🇰🇷' }, // South Korea
+  { code: 'SEK', flag: '🇸🇪' }, // Sweden
+  { code: 'CHF', flag: '🇨🇭' }, // Switzerland
+  { code: 'THB', flag: '🇹🇭' }, // Thailand
+  { code: 'TRY', flag: '🇹🇷' }, // Turkey
+  { code: 'GBP', flag: '🇬🇧' }, // United Kingdom
+  { code: 'USD', flag: '🇺🇸' }, // USA
 ];
 
-const rates = {
-  USD: 1,
-  GBP: 1.341,
-  EUR: 1.165,
-  JPY: 0.00663,
-};
+// No local fallback: CNB must provide data
 
 const Container = styled.View`
   flex: 1;
@@ -146,7 +208,17 @@ const DropdownItem = styled.TouchableOpacity`
   border-bottom-color: #f0f0f0;
 `;
 
-const CurrencySelector = ({ value, onChange, currencies }) => {
+interface CurrencySelectorProps {
+  value: Currency;
+  onChange: (c: Currency) => void;
+  currencies: Currency[];
+}
+
+const CurrencySelector = ({
+  value,
+  onChange,
+  currencies,
+}: CurrencySelectorProps) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   return (
@@ -160,7 +232,7 @@ const CurrencySelector = ({ value, onChange, currencies }) => {
       </TouchableOpacity>
       {showDropdown && (
         <Dropdown>
-          {currencies.map(cur => (
+          {currencies.map((cur: Currency) => (
             <DropdownItem
               key={cur.code}
               onPress={() => {
@@ -183,6 +255,22 @@ const ConversionScreen = () => {
   const [toCurrency, setToCurrency] = useState(currencies[2]); // Default to EUR
   const [amount, setAmount] = useState('1000.00');
 
+  const { data, isLoading, isError } = useCnbRates();
+
+  // Build a map of currency -> CZK per 1 unit from CNB
+  const liveMap = useMemo(() => {
+    if (!data) return null;
+    const byCode = rateMapByCode(data.rates);
+    const toCzk: Record<string, number> = {};
+    Object.keys(byCode).forEach(code => {
+      const r = byCode[code];
+      toCzk[code] = czkPerUnit(r);
+    });
+    // Add CZK itself as baseline 1 CZK = 1 CZK if present elsewhere
+    toCzk['CZK'] = 1;
+    return toCzk;
+  }, [data]);
+
   const handleSwap = () => {
     const temp = fromCurrency;
     setFromCurrency(toCurrency);
@@ -190,8 +278,13 @@ const ConversionScreen = () => {
   };
 
   const parsedAmount = parseFloat(amount) || 0;
-  const exchangeRate = rates[toCurrency.code] / rates[fromCurrency.code];
-  const converted = (parsedAmount * exchangeRate).toFixed(2);
+  // Compute via CZK triangulation only when CNB data is present
+  const exchangeRate =
+    liveMap && liveMap[fromCurrency.code] && liveMap[toCurrency.code]
+      ? liveMap[toCurrency.code] / liveMap[fromCurrency.code]
+      : undefined;
+  const converted =
+    exchangeRate !== undefined ? (parsedAmount * exchangeRate).toFixed(2) : '-';
 
   return (
     <Container>
@@ -225,10 +318,18 @@ const ConversionScreen = () => {
         <ConvertedAmount>{converted}</ConvertedAmount>
       </CurrencyRow>
       <RateContainer>
-        <RateLabel>Indicative Exchange Rate</RateLabel>
-        <RateText>
-          1 {fromCurrency.code} = {exchangeRate.toFixed(4)} {toCurrency.code}
-        </RateText>
+        <RateLabel>
+          {isLoading
+            ? 'Loading rates from CNB…'
+            : isError
+              ? "Can't get data from CNB"
+              : `CNB daily rates (${data?.date})`}
+        </RateLabel>
+        {exchangeRate !== undefined ? (
+          <RateText>
+            1 {fromCurrency.code} = {exchangeRate.toFixed(4)} {toCurrency.code}
+          </RateText>
+        ) : null}
       </RateContainer>
     </Container>
   );
