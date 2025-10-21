@@ -1,6 +1,6 @@
 import { StatusBar, StyleSheet, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import ConversionScreen from './screens/ConversionScreen';
+import ConversionScreen from './src/screens/ConversionScreen';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
