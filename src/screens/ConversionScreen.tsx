@@ -17,10 +17,9 @@ import {
   ConvertedAmount,
 } from '../styles/common';
 
-const ConversionScreen: React.FC = () => {
+const ConversionScreen = () => {
   const [toCurrency, setToCurrency] = useState<Currency>(currencies[6]); // Default to EUR
   const [amount, setAmount] = useState('1000.00');
-  const [isReversed, setIsReversed] = useState(false);
 
   const { data, isLoading, isError } = useCnbRates();
 
@@ -38,23 +37,16 @@ const ConversionScreen: React.FC = () => {
 
   const handleSwap = () => {
     if (converted !== '-' && converted !== '0.00') {
-      setAmount(converted);
-      setIsReversed(!isReversed);
+      const swappedAmount = (parsedAmount / exchangeRate).toFixed(2);
+      setAmount(String(swappedAmount));
     }
   };
 
   const parsedAmount = parseFloat(amount) || 0;
-  // When isReversed=true, treat the CZK input as if it's the target currency amount
-  // and convert it to CZK (which will be displayed in the bottom field)
   const exchangeRate =
-    liveMap && liveMap[toCurrency.code]
-      ? isReversed
-        ? liveMap[toCurrency.code] // Treat input as target currency, convert to CZK
-        : 1 / liveMap[toCurrency.code] // Normal: convert CZK to target currency
-      : undefined;
+    liveMap && liveMap[toCurrency.code] ? liveMap[toCurrency.code] : 1;
 
-  const converted =
-    exchangeRate !== undefined ? (parsedAmount / exchangeRate).toFixed(2) : '-';
+  const converted = (parsedAmount * exchangeRate).toFixed(2);
 
   return (
     <Container>
@@ -91,7 +83,6 @@ const ConversionScreen: React.FC = () => {
         isError={isError}
         date={data?.date}
         exchangeRate={exchangeRate}
-        isReversed={isReversed}
         toCurrency={toCurrency}
       />
     </Container>

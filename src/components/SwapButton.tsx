@@ -5,7 +5,7 @@ interface SwapButtonProps {
   onPress: () => void;
 }
 
-const SwapButton: React.FC<SwapButtonProps> = ({ onPress }) => {
+const SwapButton = ({ onPress }: SwapButtonProps) => {
   return (
     <StyledSwapButton onPress={onPress}>
       <SwapIcon>⇅</SwapIcon>

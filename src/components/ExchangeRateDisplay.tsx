@@ -7,36 +7,28 @@ interface ExchangeRateDisplayProps {
   isError: boolean;
   date?: string;
   exchangeRate?: number;
-  isReversed: boolean;
   toCurrency: Currency;
 }
 
-const ExchangeRateDisplay: React.FC<ExchangeRateDisplayProps> = ({
+const ExchangeRateDisplay = ({
   isLoading,
   isError,
   date,
   exchangeRate,
-  isReversed,
   toCurrency,
-}) => {
+}: ExchangeRateDisplayProps) => {
   const getRateLabel = () => {
     if (isLoading) return 'Loading rates from CNB...';
     if (isError) return "Can't get data from CNB";
     return `CNB daily rates (${date})`;
   };
 
-  const getRateText = () => {
-    if (exchangeRate === undefined) return null;
-
-    return isReversed
-      ? `1 ${toCurrency.code} = ${(1 / exchangeRate).toFixed(4)} CZK`
-      : `1 CZK = ${(1 / exchangeRate).toFixed(4)} ${toCurrency.code}`;
-  };
-
   return (
     <RateContainer>
       <RateLabel>{getRateLabel()}</RateLabel>
-      {exchangeRate !== undefined && <RateText>{getRateText()}</RateText>}
+      {exchangeRate !== undefined && (
+        <RateText>{`1 CZK = ${(1 / exchangeRate).toFixed(4)} ${toCurrency.code}`}</RateText>
+      )}
     </RateContainer>
   );
 };

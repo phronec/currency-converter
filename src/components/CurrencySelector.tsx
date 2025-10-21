@@ -9,11 +9,11 @@ import {
   DropdownItem,
 } from '../styles/currencySelector';
 
-const CurrencySelector: React.FC<CurrencySelectorProps> = ({
+const CurrencySelector = ({
   value,
   onChange,
   currencies,
-}) => {
+}: CurrencySelectorProps) => {
   const [showDropdown, setShowDropdown] = useState(false);
 
   const handleToggleDropdown = () => {
